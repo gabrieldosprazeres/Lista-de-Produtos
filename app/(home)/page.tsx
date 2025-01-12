@@ -15,7 +15,7 @@ const Home = async () => {
           <AddProductButton userCanAddProduct />
           <ModeToggle />
         </div>
-        <div className="flex-1 overflow-x-auto">
+        <div className="flex-1 overflow-x-auto m-4">
           <DataTable
             columns={productColumns}
             data={JSON.parse(JSON.stringify(products))}

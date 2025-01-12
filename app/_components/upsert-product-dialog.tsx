@@ -22,6 +22,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MoneyInput } from "./money-input";
 import { upsertProduct } from "../_actions/upsert-product";
+import { useState } from "react";
+import { Loader2Icon } from "lucide-react";
 
 interface UpsertProductDialogProps {
   isOpen: boolean;
@@ -52,6 +54,8 @@ const UpsertProductDialog = ({
   defaultValues,
   productId,
 }: UpsertProductDialogProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const form = useForm<formSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues ?? {
@@ -62,16 +66,19 @@ const UpsertProductDialog = ({
   });
 
   const onSubmit = async (data: formSchema) => {
+    setIsLoading(true);
     try {
       await upsertProduct({
         ...data,
         id: productId,
         quantity: data.quantity ?? 1,
       });
-      setIsOpen(false);
       form.reset();
+      setIsOpen(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -160,8 +167,14 @@ const UpsertProductDialog = ({
                 </Button>
               </DialogClose>
 
-              <Button type="submit" className="flex-1">
-                {isUpdate ? "Atualizar" : "Adicionar"}
+              <Button type="submit" className="flex-1" disabled={isLoading}>
+                {isLoading ? (
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                ) : isUpdate ? (
+                  "Atualizar"
+                ) : (
+                  "Adicionar"
+                )}
               </Button>
             </DialogFooter>
           </form>

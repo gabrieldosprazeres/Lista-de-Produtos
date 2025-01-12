@@ -38,7 +38,31 @@ export function DataTable<TData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
-                return (
+                return header.column.columnDef.header === "Ações" ? (
+                  <TableHead
+                    key={header.id}
+                    className="whitespace-nowrap text-center"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ) : header.column.columnDef.header === "Total" ? (
+                  <TableHead
+                    key={header.id}
+                    className="whitespace-nowrap text-end"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ) : (
                   <TableHead key={header.id} className="whitespace-nowrap">
                     {header.isPlaceholder
                       ? null
